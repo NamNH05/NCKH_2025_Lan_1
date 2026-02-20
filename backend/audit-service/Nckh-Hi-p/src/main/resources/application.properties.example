@@ -1,0 +1,52 @@
+# Audit Service Configuration
+# Copy this file to src/main/resources/application.properties
+# Adjust values for your environment
+
+# ============================================
+# SERVER CONFIGURATION
+# ============================================
+spring.application.name=audit-service
+server.port=8004
+server.address=0.0.0.0
+
+# ============================================
+# DATABASE CONFIGURATION (PostgreSQL)
+# ============================================
+
+spring.datasource.url=jdbc:postgresql://localhost:5432/nckh_auth?timezone=Asia/Ho_Chi_Minh
+spring.datasource.username=auth_user
+spring.datasource.password=auth@123456
+spring.datasource.driver-class-name=org.postgresql.Driver
+
+spring.datasource.hikari.maximum-pool-size=20
+spring.datasource.hikari.minimum-idle=5
+
+# ============================================
+# JPA / HIBERNATE CONFIGURATION
+# ============================================
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.show-sql=false
+
+# ============================================
+# LOGGING CONFIGURATION
+# ============================================
+
+logging.level.root=INFO
+logging.level.com.example=DEBUG
+logging.file.name=logs/audit-service.log
+
+# ============================================
+# CHARSET
+# ============================================
+
+server.servlet.encoding.charset=UTF-8
+server.servlet.encoding.force=true
+
+# ============================================
+# ENVIRONMENT-SPECIFIC PROFILES
+# ============================================
+
+spring.profiles.active=dev
+# spring.profiles.active=prod

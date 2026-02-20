@@ -1,0 +1,506 @@
+{
+  "info": {
+    "_postman_id": "nckh-ecommerce-testing-001",
+    "name": "NCKH E-commerce Testing",
+    "description": "Collection kiểm thử tự động cho dự án NCKH E-commerce\nTest Auth Service Login API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth Service",
+      "description": "Kiểm thử Auth Service endpoints",
+      "item": [
+        {
+          "name": "TC1 - Login Success",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Test Case 1: Login thành công",
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response body is not empty', function () {",
+                  "    pm.response.to.not.be.empty;",
+                  "});",
+                  "",
+                  "pm.test('Response has token', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('token');",
+                  "    pm.expect(jsonData.token).to.not.be.empty;",
+                  "});",
+                  "",
+                  "pm.test('Response has username', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('username');",
+                  "    pm.expect(jsonData.username).to.not.be.empty;",
+                  "});",
+                  "",
+                  "pm.test('Response has id', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('id');",
+                  "    pm.expect(jsonData.id).to.be.a('number');",
+                  "});",
+                  "",
+                  "pm.test('Response has email', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('email');",
+                  "});",
+                  "",
+                  "pm.test('Response has role', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('role');",
+                  "    pm.expect(jsonData.role).to.include('ROLE');",
+                  "});",
+                  "",
+                  "// Save token cho requests tiếp theo",
+                  "try {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData.token && jsonData.username) {",
+                  "        pm.environment.set('token', jsonData.token);",
+                  "        pm.environment.set('username', jsonData.username);",
+                  "        console.log('✅ Token saved successfully!');",
+                  "        console.log('Token length: ' + jsonData.token.length);",
+                  "        console.log('Username: ' + jsonData.username);",
+                  "    } else {",
+                  "        console.log('❌ Token save failed: Missing token or username in response');",
+                  "    }",
+                  "} catch(e) {",
+                  "    console.log('❌ Token save failed: ' + e.message);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"john\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{auth_service_url}}/api/auth/login",
+              "protocol": "http",
+              "host": [
+                "{{auth_service_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "description": "✅ Test Case 1: Login thành công với đúng username/password"
+          },
+          "response": []
+        },
+        {
+          "name": "TC2 - Login Wrong Password",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Test Case 2: Login sai password",
+                  "pm.test('Status code is 401 or 400', function () {",
+                  "    pm.expect([400, 401]).to.include(pm.response.code);",
+                  "});",
+                  "",
+                  "pm.test('Response has error message', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('message');",
+                  "    pm.expect(jsonData.message).to.not.be.empty;",
+                  "});",
+                  "",
+                  "pm.test('Response success should be false', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData.hasOwnProperty('success')) {",
+                  "        pm.expect(jsonData.success).to.equal(false);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test('No token in response', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData.data) {",
+                  "        pm.expect(jsonData.data).to.not.have.property('token');",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"john\",\n  \"password\": \"wrongpassword\"\n}"
+            },
+            "url": {
+              "raw": "{{auth_service_url}}/api/auth/login",
+              "protocol": "http",
+              "host": [
+                "{{auth_service_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "description": "❌ Test Case 2: Login sai password - Expected: 401/400 error"
+          },
+          "response": []
+        },
+        {
+          "name": "TC3 - Login User Not Found",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Test Case 3: Login user không tồn tại",
+                  "pm.test('Status code is 401 or 400', function () {",
+                  "    pm.expect([400, 401]).to.include(pm.response.code);",
+                  "});",
+                  "",
+                  "pm.test('Response has error message', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('message');",
+                  "});",
+                  "",
+                  "pm.test('Error message mentions User not found or invalid', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    var message = jsonData.message.toLowerCase();",
+                  "    pm.expect(message).to.satisfy(function(msg) {",
+                  "        return msg.includes('not found') || msg.includes('invalid') || msg.includes('không tồn tại');",
+                  "    });",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"invaliduser\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{auth_service_url}}/api/auth/login",
+              "protocol": "http",
+              "host": [
+                "{{auth_service_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "description": "❌ Test Case 3: Login với user không tồn tại"
+          },
+          "response": []
+        },
+        {
+          "name": "TC4 - Login Empty Username",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Test Case 4: Login với username trống",
+                  "pm.test('Status code is 400 or 422', function () {",
+                  "    pm.expect([400, 422]).to.include(pm.response.code);",
+                  "});",
+                  "",
+                  "pm.test('Response has error message', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('message');",
+                  "    console.log('❌ Message: ' + jsonData.message);",
+                  "});",
+                  "",
+                  "pm.test('Should reject empty username', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    var message = (jsonData.message || '').toLowerCase();",
+                  "    var keywords = ['required', 'empty', 'blank', 'bắt buộc', 'không được', 'validation', 'invalid', 'failed', 'username'];",
+                  "    var found = keywords.some(function(k) { return message.includes(k); });",
+                  "    console.log('Validation keywords found: ' + found);",
+                  "    pm.expect(found || pm.response.code === 400).to.be.true;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{auth_service_url}}/api/auth/login",
+              "protocol": "http",
+              "host": [
+                "{{auth_service_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "description": "❌ Test Case 4: Login với username trống - Expected: 400 validation error"
+          },
+          "response": []
+        },
+        {
+          "name": "TC5 - Login Empty Password",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Test Case 5: Login với password trống",
+                  "pm.test('Status code is 400 or 422', function () {",
+                  "    pm.expect([400, 422]).to.include(pm.response.code);",
+                  "});",
+                  "",
+                  "pm.test('Response has error message', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('message');",
+                  "    console.log('❌ Message: ' + jsonData.message);",
+                  "});",
+                  "",
+                  "pm.test('Should reject empty password', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    var message = (jsonData.message || '').toLowerCase();",
+                  "    var keywords = ['required', 'empty', 'blank', 'bắt buộc', 'không được', 'validation', 'invalid', 'failed', 'password'];",
+                  "    var found = keywords.some(function(k) { return message.includes(k); });",
+                  "    console.log('Validation keywords found: ' + found);",
+                  "    pm.expect(found || pm.response.code === 400).to.be.true;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"john\",\n  \"password\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{auth_service_url}}/api/auth/login",
+              "protocol": "http",
+              "host": [
+                "{{auth_service_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "description": "❌ Test Case 5: Login với password trống - Expected: 400 validation error"
+          },
+          "response": []
+        },
+        {
+          "name": "TC6 - Validate Token",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "// Kiểm tra xem có token không",
+                  "var token = pm.environment.get('token');",
+                  "var username = pm.environment.get('username');",
+                  "",
+                  "if (!token || token === '') {",
+                  "    console.log('❌ ERROR: No token found!');",
+                  "    console.log('👉 Please run TC1 (Login Success) first to get a token');",
+                  "    pm.execution.skipRequest();",
+                  "    pm.test('⏭️  SKIPPED - Run TC1 first', function() {",
+                  "        pm.expect(true).to.be.true;",
+                  "    });",
+                  "} else {",
+                  "    console.log('✅ Token found (length: ' + token.length + ')');",
+                  "    console.log('✅ Username: ' + username);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Test Case 6: Validate token",
+                  "var token = pm.environment.get('token');",
+                  "if (!token) {",
+                  "    pm.test('❌ No token - Run TC1 first', function() {",
+                  "        pm.expect(false).to.be.true;",
+                  "    });",
+                  "} else {",
+                  "    console.log('Response Status: ' + pm.response.code);",
+                  "    console.log('Response Length: ' + pm.response.length);",
+                  "    console.log('Response Body: ' + pm.response.text().substring(0, 300));",
+                  "    ",
+                  "    pm.test('Should get 200 response', function () {",
+                  "        if (pm.response.code === 500) {",
+                  "            console.log('❌ 500 ERROR - Endpoint không hoạt động');",
+                  "        }",
+                  "        pm.expect([200, 201]).to.include(pm.response.code);",
+                  "    });",
+                  "    ",
+                  "    pm.test('Should have response body', function () {",
+                  "        pm.expect(pm.response.text()).to.not.be.empty;",
+                  "    });",
+                  "    ",
+                  "    try {",
+                  "        var jsonData = pm.response.json();",
+                  "        console.log('✅ Response JSON valid');",
+                  "        console.log('Response keys: ' + Object.keys(jsonData).join(', '));",
+                  "        ",
+                  "        pm.test('Response should have username', function () {",
+                  "            pm.expect(jsonData).to.have.property('username');",
+                  "            console.log('Username: ' + jsonData.username);",
+                  "        });",
+                  "        ",
+                  "        pm.test('Response should have authorities', function () {",
+                  "            pm.expect(jsonData).to.have.property('authorities');",
+                  "            pm.expect(jsonData.authorities).to.be.an('array');",
+                  "            console.log('Authorities: ' + JSON.stringify(jsonData.authorities));",
+                  "        });",
+                  "        ",
+                  "        pm.test('Username should match login user', function () {",
+                  "            var expectedUsername = pm.environment.get('username');",
+                  "            console.log('Expected: ' + expectedUsername + ', Got: ' + jsonData.username);",
+                  "            pm.expect(jsonData.username).to.equal(expectedUsername);",
+                  "        });",
+                  "    } catch(e) {",
+                  "        console.log('❌ JSON parse error: ' + e.message);",
+                  "        console.log('Response text: ' + pm.response.text());",
+                  "        pm.test('Response is valid JSON', function () {",
+                  "            pm.expect(false).to.be.true;",
+                  "        });",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{auth_service_url}}/api/test/me",
+              "protocol": "http",
+              "host": [
+                "{{auth_service_url}}"
+              ],
+              "path": [
+                "api",
+                "test",
+                "me"
+              ]
+            },
+            "description": "✅ Test Case 6: Validate token - lấy thông tin user từ token\nEndpoint: GET /api/test/me (yêu cầu authorization header với Bearer token)"
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "auth_service_url",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "username",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}

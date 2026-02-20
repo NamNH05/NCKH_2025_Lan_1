@@ -1,0 +1,173 @@
+.revenue-dashboard {
+  padding: 0;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.admin-header h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #000;
+}
+
+.filter-controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.stats-section {
+  margin-bottom: 24px;
+}
+
+.stats-section .ant-row {
+  gap: 16px;
+}
+
+.stats-card {
+  background: white;
+  border-radius: 8px;
+  padding: 16px;
+  border: 1px solid #f0f0f0;
+  transition: all 0.3s ease;
+}
+
+.stats-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.admin-card {
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #f0f0f0;
+  margin-top: 24px;
+  overflow: hidden;
+}
+
+.admin-card .ant-card-head {
+  background: #fafafa;
+  border-bottom: 1px solid #f0f0f0;
+  padding: 16px;
+}
+
+.admin-card .ant-card-body {
+  padding: 0;
+}
+
+.admin-card .ant-table {
+  margin: 0;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-pending {
+  background-color: #fffbe6;
+  color: #faad14;
+}
+
+.status-failed {
+  background-color: #fff7f0;
+  color: #ff4d4f;
+}
+
+
+
+/* Ant Design overrides */
+.ant-statistic-title {
+  font-size: 13px;
+  color: #999;
+  margin-bottom: 8px;
+}
+
+.ant-statistic-content {
+  font-size: 24px;
+  font-weight: 600;
+  color: #1f1f1f;
+}
+
+.ant-table-thead > tr > th {
+  background-color: #fafafa;
+  border-bottom: 1px solid #f0f0f0;
+  font-weight: 600;
+}
+
+.ant-table-tbody > tr:hover > td {
+  background-color: #fafafa;
+}
+
+.ant-select-selector {
+  border: 1px solid #d9d9d9 !important;
+  border-radius: 4px !important;
+}
+
+.ant-select-focused .ant-select-selector {
+  border-color: #1890ff !important;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.1) !important;
+}
+
+.ant-picker {
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+}
+
+.ant-picker-focused {
+  border-color: #1890ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .admin-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .admin-header h1 {
+    font-size: 20px;
+  }
+
+  .filter-controls {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .filter-controls > * {
+    width: 100%;
+  }
+
+  .stats-section .ant-row {
+    flex-direction: column;
+  }
+
+  .admin-card {
+    margin-top: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-header h1 {
+    font-size: 18px;
+  }
+
+  .stats-card {
+    padding: 12px;
+  }
+
+  .ant-statistic-content {
+    font-size: 18px;
+  }
+}

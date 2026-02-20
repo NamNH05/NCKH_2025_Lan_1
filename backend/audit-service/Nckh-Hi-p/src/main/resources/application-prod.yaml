@@ -1,0 +1,77 @@
+##############################################################################
+# PRODUCTION CONFIGURATION - Audit Service
+# Active: java -Dspring.profiles.active=prod -jar audit-service.jar
+##############################################################################
+
+server:
+  port: 8082
+
+spring:
+  datasource:
+    url: jdbc:oracle:thin:@//localhost:1521/freepdb1
+    username: audit_user
+    password: hiep
+    driver-class-name: oracle.jdbc.OracleDriver
+    
+    hikari:
+      pool-name: AuditHikariPool
+      maximum-pool-size: 20 
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+  jpa:
+    hibernate:
+      ddl-auto: validate  # CRITICAL: validate only in production
+    show-sql: false  # ✅ PRODUCTION: Tắt hoàn toàn
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.OracleDialect
+        jdbc:
+          batch_size: 50 
+          batch_versioned_data: true
+        order_inserts: true
+        order_updates: true
+        jdbc.lob.non_contextual_creation: true
+        
+        # Production: Format SQL OFF (performance)
+        format_sql: false
+
+  task:
+    execution:
+      thread-name-prefix: AuditAsync-
+      pool:
+        core-size: 10 
+        max-size: 50
+        queue-capacity: 1000
+        keep-alive: 60s
+
+##############################################################################
+# PRODUCTION LOGGING CONFIGURATION
+##############################################################################
+
+logging:
+  # File-based logging (not console)
+  file:
+    name: /var/log/services/audit-service.log
+    max-size: 50MB              # Xoay file khi đạt 50MB
+    max-history: 30             # Giữ 30 file cũ (~30 ngày)
+    total-size-cap: 1500MB      # Tối đa 1.5GB storage
+
+  # Logging Levels
+  level:
+    root: WARN                  # Chỉ log WARNING trở lên
+    org.springframework: ERROR   # Spring framework: ERROR only
+    org.springframework.web: WARN
+    org.springframework.security: INFO
+    com.example.audit: INFO     # Application: INFO level
+
+  # Output pattern (compact format for production)
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    console: ""  # Disable console output
+
+  # Encoding
+  charset:
+    file: UTF-8

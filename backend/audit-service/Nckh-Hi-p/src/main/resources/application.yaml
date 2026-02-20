@@ -1,0 +1,47 @@
+server:
+  port: 8082
+spring:
+  datasource:
+    url: jdbc:oracle:thin:@//localhost:1521/freepdb1
+    username: audit_user
+    password: hiep
+    driver-class-name: oracle.jdbc.OracleDriver
+    
+    hikari:
+      pool-name: AuditHikariPool
+      maximum-pool-size: 20 
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000 # 30 phút, giúp làm mới kết nối Oracle tránh lỗi 'Connection Reset'
+
+  jpa:
+    # ddl-auto: update chỉ nên dùng ở môi trường Dev. 
+    # Với Oracle và @Lob (CLOB), Hibernate đôi khi không cập nhật đúng schema, hãy cẩn thận.
+    hibernate:
+      ddl-auto: update 
+    show-sql: false # Tắt ở production, bật ở dev nếu cần debug
+    properties:
+      hibernate:
+        # Nếu bạn dùng Spring Boot 3 (Hibernate 6), nên dùng dialect chung này, 
+        # nó sẽ tự nhận diện phiên bản Oracle (12c, 19c, 21c, 23c).
+        dialect: org.hibernate.dialect.OracleDialect 
+        
+        # Cấu hình Batch Processing (Cực kỳ quan trọng cho Audit Log)
+        jdbc:
+          batch_size: 50 
+          batch_versioned_data: true
+        order_inserts: true
+        order_updates: true
+        
+        # Giúp xử lý các cột CLOB/BLOB tốt hơn trên Oracle
+        jdbc.lob.non_contextual_creation: true
+
+  task:
+    execution:
+      thread-name-prefix: AuditAsync- # Đặt tên để dễ debug trong Log
+      pool:
+        core-size: 10 
+        max-size: 50
+        queue-capacity: 1000
+        keep-alive: 60s

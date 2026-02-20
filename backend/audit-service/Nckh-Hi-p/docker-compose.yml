@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+  # Dịch vụ Oracle Database
+  audit-db:
+    image: gvenzl/oracle-free:latest
+    container_name: oracle-db
+    restart: unless-stopped
+    environment:
+      - ORACLE_PASSWORD=hiep         # Mật khẩu hệ thống (SYS)
+      - APP_USER=audit_user         # Tạo sẵn User cho app
+      - APP_USER_PASSWORD=hiep     # Mật khẩu cho User app
+    ports:
+      - "1521:1521"
+    volumes:
+      - oracle_data:/opt/oracle/oradata
+      - ../../../database/sql-scripts:/container-entrypoint-initdb.d
+
+
+volumes:
+  oracle_data:

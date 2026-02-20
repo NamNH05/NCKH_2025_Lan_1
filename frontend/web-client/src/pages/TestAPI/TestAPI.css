@@ -1,0 +1,102 @@
+.test-api-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.test-api-container h1 {
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.test-btn {
+  background-color: #1890ff;
+  color: white;
+  border: none;
+  padding: 10px 30px;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.test-btn:hover {
+  background-color: #0050b3;
+}
+
+.test-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.result-item {
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 4px;
+  background-color: #fafafa;
+}
+
+.result-item.success {
+  border-color: #52c41a;
+  background-color: #f6ffed;
+}
+
+.result-item.error {
+  border-color: #ff4d4f;
+  background-color: #fff1f0;
+}
+
+.result-item.testing {
+  border-color: #faad14;
+  background-color: #fffbe6;
+}
+
+.result-name {
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.result-status {
+  font-size: 12px;
+  color: #666;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.result-item.success .result-status {
+  color: #52c41a;
+}
+
+.result-item.error .result-status {
+  color: #ff4d4f;
+}
+
+.result-data {
+  background-color: #f5f5f5;
+  padding: 10px;
+  border-radius: 3px;
+  overflow-x: auto;
+  font-size: 12px;
+  font-family: "Courier New", monospace;
+  margin: 0;
+}
+
+.result-error {
+  color: #ff4d4f;
+  font-size: 12px;
+  padding: 8px;
+  background-color: #fff1f0;
+  border-radius: 3px;
+  border-left: 3px solid #ff4d4f;
+}

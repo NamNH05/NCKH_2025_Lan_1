@@ -1,0 +1,73 @@
+# Order Service Configuration
+# Copy this file to src/main/resources/application.properties
+# Adjust values for your environment (local, dev, production)
+
+# ============================================
+# SERVER CONFIGURATION
+# ============================================
+spring.application.name=order-service
+server.port=8002
+server.address=0.0.0.0
+
+# ============================================
+# DATABASE CONFIGURATION (SQL Server)
+# ============================================
+
+# Database Connection
+# Format: jdbc:sqlserver://host:port;databaseName=database
+spring.datasource.url=jdbc:sqlserver://localhost:1433;databaseName=order_dB;encrypt=true;trustServerCertificate=true;loginTimeout=30
+spring.datasource.username=orderuser
+spring.datasource.password=Order@123
+spring.datasource.driver-class-name=com.microsoft.sqlserver.jdbc.SQLServerDriver
+
+# Connection Pool Configuration
+spring.datasource.hikari.maximum-pool-size=10
+spring.datasource.hikari.minimum-idle=2
+spring.datasource.hikari.connection-timeout=30000
+spring.datasource.hikari.idle-timeout=300000
+spring.datasource.hikari.max-lifetime=900000
+
+# ============================================
+# JPA / HIBERNATE CONFIGURATION
+# ============================================
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=false
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.SQLServerDialect
+spring.jpa.properties.hibernate.format_sql=true
+
+# ============================================
+# LOGGING CONFIGURATION
+# ============================================
+
+logging.level.root=INFO
+logging.level.com.example=DEBUG
+logging.file.name=logs/order-service.log
+
+# ============================================
+# ERROR HANDLING
+# ============================================
+
+server.error.include-message=always
+server.error.include-binding-errors=always
+server.error.include-stacktrace=always
+
+# ============================================
+# JACKSON CONFIGURATION
+# ============================================
+
+spring.jackson.time-zone=Asia/Ho_Chi_Minh
+
+# ============================================
+# CHARSET
+# ============================================
+
+server.servlet.encoding.charset=UTF-8
+server.servlet.encoding.force=true
+
+# ============================================
+# ENVIRONMENT-SPECIFIC PROFILES
+# ============================================
+
+spring.profiles.active=dev
+# spring.profiles.active=prod
