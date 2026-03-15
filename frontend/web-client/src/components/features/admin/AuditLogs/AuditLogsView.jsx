@@ -21,12 +21,12 @@ const AuditLogsView = () => {
     const fetchLogs = async (pageNum = 0) => {
         setLoading(true);
         try {
-            let url = `http://localhost:8082/api/v1/audits?page=${pageNum}&size=${size}`;
+            let url = `/v1/audits?page=${pageNum}&size=${size}`;
             
             if (filterUser) {
-                url = `http://localhost:8082/api/v1/audits/user/${filterUser}?page=${pageNum}&size=${size}`;
+                url = `/v1/audits/user/${filterUser}?page=${pageNum}&size=${size}`;
             } else if (filterType && filterEntity) {
-                url = `http://localhost:8082/api/v1/audits/search?actionType=${filterType}&entityName=${filterEntity}&page=${pageNum}&size=${size}`;
+                url = `/v1/audits/search?actionType=${filterType}&entityName=${filterEntity}&page=${pageNum}&size=${size}`;
             }
             
             const response = await axiosClient.get(url);

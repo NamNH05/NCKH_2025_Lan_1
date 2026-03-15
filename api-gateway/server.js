@@ -2,7 +2,10 @@ const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
 const jwt = require('jsonwebtoken');
+const helmet = require('helmet');
 const setupCSRFProtection = require('./csrf-middleware');
+const { apiLimiter, loginLimiter, registerLimiter, searchLimiter } = require('./rate-limit');
+const { validateLoginInput, validateRegisterInput, validateSearchInput } = require('./input-validation');
 require('dotenv').config();
 
 const app = express();
@@ -11,11 +14,13 @@ const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:8080';
 const JWT_SECRET = process.env.JWT_SECRET;
 
 // Middleware
+app.use(helmet());
 app.use(cors({
   origin: ['http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:5174', 'http://127.0.0.1:5174'],
   credentials: true
 }));
 app.use(express.json());
+app.use(apiLimiter);
 
 // Setup CSRF Protection
 setupCSRFProtection(app);
@@ -62,13 +67,17 @@ const verifyToken = (req, res, next) => {
 
 app.use(verifyToken);
 
+// Search endpoints are high frequency and need dedicated throttling + query sanitation.
+app.use('/api/products/search', searchLimiter, validateSearchInput);
+app.use('/api/v1/audits/search', searchLimiter, validateSearchInput);
+
 // Health check
 app.get('/health', (req, res) => {
   res.json({ status: 'API Gateway running', timestamp: new Date() });
 });
 
 // Auth routes - Register
-app.post('/api/auth/register', async (req, res) => {
+app.post('/api/auth/register', registerLimiter, validateRegisterInput, async (req, res) => {
   try {
     console.log('Forwarding register request to backend');
     const response = await axios.post(`${BACKEND_URL}/api/auth/register`, req.body);
@@ -83,7 +92,7 @@ app.post('/api/auth/register', async (req, res) => {
 });
 
 // Auth routes - Login
-app.post('/api/auth/login', async (req, res) => {
+app.post('/api/auth/login', loginLimiter, validateLoginInput, async (req, res) => {
   try {
     console.log('Forwarding login request to backend');
     const response = await axios.post(`${BACKEND_URL}/api/auth/login`, req.body);

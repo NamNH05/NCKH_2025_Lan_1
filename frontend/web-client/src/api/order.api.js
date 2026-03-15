@@ -93,7 +93,7 @@ const orderAPI = {
    * Process payment for order
    */
   payOrder: (orderId) => {
-    return axiosClient.post(`/orders/${orderId}/pay`, {});
+    return axiosClient.put(`/orders/${orderId}/pay`, {});
   },
 
   /**

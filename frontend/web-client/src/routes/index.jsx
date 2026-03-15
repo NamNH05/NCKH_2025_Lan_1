@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "../context/AuthContext";
 import Login from "../pages/Login";
 import Home from "../pages/Home/Home";
 import CategoryPage from "../pages/CategoryPage/CategoryPage";
@@ -21,8 +20,7 @@ import PrivateRoute from "./PrivateRoute";
 function AppRoutes() {
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <Routes>
+      <Routes>
         <Route path="/login" element={<Login />} />
 
         <Route path="/register" element={<RegisterPage />} />
@@ -158,7 +156,6 @@ function AppRoutes() {
           }
         />
       </Routes>
-      </AuthProvider>
     </BrowserRouter>
   );
 }
